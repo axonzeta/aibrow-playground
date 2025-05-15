@@ -15,9 +15,10 @@ for (const key of ['LanguageDetector', 'LanguageModel', 'Rewriter', 'Summarizer'
 }
 
 Logger.logTask('Checking for window.aibrow...', async (log) => {
-  log(!!window.aibrow)
+  const installed = !!window.aibrow && !!window.aibrow.LanguageModel // LanguageModel introduced in version 2.0.0+
+  log(installed)
 
-  if (!window.aibrow) {
+  if (!installed) {
     document.getElementById('not-installed').classList.remove('d-none')
   } else {
     const { helper } = await window.aibrow.capabilities()
