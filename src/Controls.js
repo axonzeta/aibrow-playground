@@ -13,6 +13,7 @@ class Controls {
   #$modelField
   #$submitButton
   #$resetButton
+  #$modelOptionFields
 
   /* **************************************************************************/
   // MARK: Lifecycle
@@ -23,14 +24,16 @@ class Controls {
     this.#$forms = {
       model: this.#$root.querySelector('form[name="model"]'),
       tools: {
-        coreModel: this.#$root.querySelector('form[name="tool-coreModel"]'),
+        languageDetector: this.#$root.querySelector('form[name="tool-languageDetector"]'),
         languageModel: this.#$root.querySelector('form[name="tool-languageModel"]'),
         summarizer: this.#$root.querySelector('form[name="tool-summarizer"]'),
+        translator: this.#$root.querySelector('form[name="tool-translator"]'),
         rewriter: this.#$root.querySelector('form[name="tool-rewriter"]'),
         writer: this.#$root.querySelector('form[name="tool-writer"]')
       }
     }
     this.#$allFields = this.#$root.querySelectorAll('input, select, textarea')
+    this.#$modelOptionFields = this.#$root.querySelectorAll('#model-options input, #model-options select, #model-options textarea')
 
     this.#$modelField = this.#$forms.model.querySelector('[name="model"]')
     this.#$toolField = this.#$forms.model.querySelector('[name="tool"]')
@@ -71,6 +74,24 @@ class Controls {
     }
   }
 
+  /**
+   * Enables all the model option controls
+   */
+  enableModelOptions () {
+    for (const $el of this.#$modelOptionFields) {
+      $el.removeAttribute('disabled')
+    }
+  }
+
+  /**
+   * Disables all the model option controls
+   */
+  disableModelOptions () {
+    for (const $el of this.#$modelOptionFields) {
+      $el.setAttribute('disabled', 'disabled')
+    }
+  }
+
   /* **************************************************************************/
   // MARK: Tool filtering
   /* **************************************************************************/
@@ -94,7 +115,7 @@ class Controls {
   /* **************************************************************************/
 
   /**
-   * @returns the selected tool
+   * @returns the selected tools name
    */
   getTool () {
     return this.#$toolField.value

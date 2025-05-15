@@ -34,9 +34,10 @@
                 <div class="mb-3">
                   <label class="form-label">Tool</label>
                   <select name="tool" class="form-control">
-                    <option value="coreModel">Core Model</option>
+                    <option value="languageDetector" selected>Language Detector</option>
                     <option value="languageModel" selected>Language Model</option>
                     <option value="summarizer">Summarizer</option>
+                    <option value="translator">Translator</option>
                     <option value="rewriter">Rewriter</option>
                     <option value="writer">Writer</option>
                   </select>
@@ -47,6 +48,7 @@
                   <label class="form-label">Model</label>
                   <select name="model" class="form-control">
                     <option value="">Default</option>
+                    <option value="__browser__">Browser</option>
                     <option value="deepseek-r1-distill-llama-8b">DeepSeek R1 Distill Llama-8B</option>
                     <option value="deepseek-r1-distill-qwen-7b">DeepSeek R1 Distill Qwen-7B</option>
                     <option value="deepseek-r1-distill-qwen-1-5b">DeepSeek R1 Distill Qwen-1.5B</option>
@@ -104,34 +106,6 @@
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Temperature</label>
-                      <input type="number" name="temperature" min="0" class="form-control" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Top K</label>
-                      <input type="number" name="top-k" min="0" class="form-control" />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Top P</label>
-                      <input type="number" name="top-p" min="0" class="form-control" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Repeat penalty</label>
-                      <input type="number" name="repeat-penalty" min="0" class="form-control" />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
                       <label class="form-label">Context size</label>
                       <input type="number" name="context-size" min="1" class="form-control" />
                     </div>
@@ -151,27 +125,55 @@
             </div>
           </form>
 
+          <!-- LanguageDetector -->
+          <form name="tool-languageDetector">
+            <div class="mb-3">
+              <label class="form-label">Input</label>
+              <textarea rows="6" name="input" class="form-control"></textarea>
+            </div>
+          </form>
+
           <!-- LanguageModel -->
           <form name="tool-languageModel">
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label class="form-label">Repeat penalty</label>
+                  <input type="number" name="repeat-penalty" min="0" class="form-control" />
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label class="form-label">Temperature</label>
+                  <input type="number" name="temperature" min="0" class="form-control" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label class="form-label">Top K</label>
+                  <input type="number" name="top-k" min="0" class="form-control" />
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label class="form-label">Top P</label>
+                  <input type="number" name="top-p" min="0" class="form-control" />
+                </div>
+              </div>
+            </div>
             <div class="mb-3">
               <label class="form-label">System prompt</label>
               <textarea rows="3" name="system-prompt" class="form-control"></textarea>
             </div>
             <div class="mb-3">
-              <label class="form-label">Input</label>
-              <textarea rows="6" name="input" class="form-control">Create an interesting story about AI in the browser</textarea>
-            </div>
-          </form>
-
-          <!-- CoreModel -->
-          <form name="tool-coreModel">
-            <div class="mb-3">
-              <label class="form-label">Grammar</label>
+              <label class="form-label">Response Constraint (JSON Grammar)</label>
               <textarea rows="3" name="grammar" class="form-control"></textarea>
             </div>
             <div class="mb-3">
               <label class="form-label">Input</label>
-              <textarea rows="6" name="input" class="form-control"></textarea>
+              <textarea rows="6" name="input" class="form-control">Create an interesting story about AI in the browser</textarea>
             </div>
           </form>
 
@@ -219,6 +221,14 @@
             <div class="mb-3">
               <label class="form-label">Input</label>
               <textarea rows="6" name="input" class="form-control">Write a story about AI in the browser</textarea>
+            </div>
+          </form>
+
+          <!-- LanguageDetector -->
+          <form name="tool-translator">
+            <div class="mb-3">
+              <label class="form-label">Input</label>
+              <textarea rows="6" name="input" class="form-control"></textarea>
             </div>
           </form>
 

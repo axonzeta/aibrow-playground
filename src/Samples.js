@@ -1,11 +1,10 @@
 export default {
   json: {
-    tool: 'coreModel',
+    tool: 'languageModel',
     forms: {
-      model: {
-        temperature: 0.1
-      },
+      model: {},
       tool: {
+        temperature: 0.1,
         grammar: JSON.stringify({
           type: 'object',
           properties: {
