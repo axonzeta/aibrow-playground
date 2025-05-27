@@ -262,8 +262,10 @@ Controls.onSubmitClicked(async () => {
       }
     }
 
+    let buffer = ''
     for await (const chunk of stream) {
-      updateAssistantMessage(chunk)
+      buffer += chunk
+      updateAssistantMessage(buffer)
     }
   } finally {
     Controls.enable()
