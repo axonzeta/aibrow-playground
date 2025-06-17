@@ -5,6 +5,7 @@ import ModelDownload from './ModelDownload.js'
 import Controls from './Controls.js'
 import deepEqual from 'fast-deep-equal'
 import Samples from './Samples.js'
+import { AIBrowWeb } from '@aibrow/web'
 
 let aiSession
 
@@ -28,6 +29,14 @@ Logger.logTask('Checking for window.aibrow...', async (log) => {
   }
 })
 
+Logger.logTask('Checking for AiBrow (WebGPU)...', async (log) => {
+  log((await AIBrowWeb.LanguageModel.availability({ gpuEngine: 'webgpu' })) === 'available')
+})
+Logger.logTask('Checking for AiBrow (Wasm)...', async (log) => {
+  log((await AIBrowWeb.LanguageModel.availability({ gpuEngine: 'wasm' })) === 'available')
+})
+
+
 /* **************************************************************************/
 // MARK: Utils
 /* **************************************************************************/
@@ -40,9 +49,25 @@ function getToolFactory () {
   const tool = Controls.getTool()
   const toolKey = tool.charAt(0).toUpperCase() + tool.slice(1)
   const model = Controls.getModel()
-  return model === '__browser__'
-    ? window[toolKey]
-    : window.aibrow[toolKey]
+
+  if (model === '__browser__') {
+    return window[toolKey]
+  } else if (model?.startsWith?.('__web__')) {
+    return AIBrowWeb[toolKey]
+  } else {
+    return window.aibrow[toolKey]
+  }
+}
+
+function getModelId () {
+  const model = Controls.getModel()
+  if (model === '__browser__') {
+    return undefined // Browser doesn't support models
+  } else if (model?.startsWith?.('__web__')) {
+    return model.replace('__web__', '') || undefined // Remove the __web__ prefix
+  } else {
+    return model
+  }
 }
 
 /* **************************************************************************/
@@ -53,7 +78,7 @@ function getToolFactory () {
  * Updates the capabilities based on the current tool and model
  */
 async function updateCapabilities () {
-  const model = Controls.getModel()
+  const model = getModelId()
   const ToolFactory = getToolFactory()
   const tool = Controls.getTool()
 
@@ -65,16 +90,16 @@ async function updateCapabilities () {
     const compatibility = await ToolFactory.compatibility({ model })
     Controls.replaceSelectOptions('gpu-engine', {
       '': 'Default',
-      ...compatibility.gpuEngines.reduce((acc, v) => ({ ...acc, [v]: v }), {})
+      ...compatibility?.gpuEngines?.reduce?.((acc, v) => ({ ...acc, [v]: v }), {})
     }, '')
     const $contextSize = Controls.getField('context-size')
-    const defaultContextSize = compatibility.defaultContextSize ?? 1024
-    const maxContextSize = compatibility.maxContextSize ?? 2048
+    const defaultContextSize = compatibility?.defaultContextSize ?? 1024
+    const maxContextSize = compatibility?.maxContextSize ?? 2048
     $contextSize.value = defaultContextSize
     $contextSize.setAttribute('max', maxContextSize)
     Controls.setTooltip($contextSize, `${0} - ${maxContextSize}`)
 
-    Controls.getField('flash-attention').checked = compatibility.defaultFlashAttention ?? true
+    Controls.getField('flash-attention').checked = compatibility?.defaultFlashAttention ?? true
   } else {
     Controls.disableModelOptions()
     Controls.replaceSelectOptions('gpu-engine', {
@@ -131,7 +156,7 @@ updateCapabilities()
 Controls.onSubmitClicked(async () => {
   const ToolFactory = getToolFactory()
   const tool = Controls.getTool()
-  const model = Controls.getModel()
+  const model = getModelId()
   const modelData = Controls.getData()
   const toolData = Controls.getData(tool)
 
